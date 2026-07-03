@@ -1,0 +1,611 @@
+<!doctype html>
+<!-- ============================================================
+     goatyler.com — the hub
+     To add / edit your sites: scroll to the SITES array in the
+     <script> at the bottom (or see README.md). One entry = one card.
+     ============================================================ -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>goatyler — the hub</title>
+<meta name="description" content="Everything Tyler builds, one hop away. Games, apps, experiments — and one very persistent goat.">
+<meta property="og:title" content="goatyler — the hub">
+<meta property="og:description" content="Everything Tyler builds, one hop away.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://goatyler.com">
+<meta name="theme-color" content="#0a0c10">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🐐%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0c10;
+    --panel:rgba(255,255,255,.035);
+    --line:rgba(255,255,255,.09);
+    --text:#ece8de;
+    --dim:#9b968a;
+    --gold:#e8b64c;
+    --gold-deep:#c9922f;
+    --pixel:"Pixelify Sans",ui-monospace,monospace;
+    --body:ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);color:var(--text);font-family:var(--body);
+    min-height:100vh;overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--gold);color:#14100a}
+  a{color:inherit}
+  :focus-visible{outline:2px dashed var(--gold);outline-offset:3px;border-radius:6px}
+
+  /* ---------- background ---------- */
+  .sky{position:fixed;inset:0;z-index:-2;overflow:hidden}
+  .blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:.16}
+  .b1{width:560px;height:560px;background:var(--gold);top:-180px;left:-120px;animation:drift1 34s ease-in-out infinite alternate}
+  .b2{width:480px;height:480px;background:#4ade80;bottom:-200px;right:-100px;opacity:.10;animation:drift2 41s ease-in-out infinite alternate}
+  .b3{width:420px;height:420px;background:#a78bfa;top:30%;left:55%;opacity:.09;animation:drift3 29s ease-in-out infinite alternate}
+  @keyframes drift1{to{transform:translate(140px,90px) scale(1.15)}}
+  @keyframes drift2{to{transform:translate(-120px,-80px) scale(1.2)}}
+  @keyframes drift3{to{transform:translate(-160px,60px) scale(.9)}}
+  .grain{
+    position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.055;
+    background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ---------- layout ---------- */
+  header,main,footer{max-width:1080px;margin:0 auto;padding:0 22px}
+  header{
+    display:flex;justify-content:space-between;align-items:center;gap:12px;
+    padding-top:20px;padding-bottom:8px;flex-wrap:wrap;
+  }
+  .brand{display:flex;align-items:center;gap:9px;font-family:var(--pixel);font-size:17px;letter-spacing:.5px}
+  .brand svg{width:24px;height:24px}
+  .brand .tld{color:var(--dim)}
+  .status{
+    display:flex;align-items:center;gap:8px;font-family:var(--pixel);font-size:13px;color:var(--dim);
+    border:1px solid var(--line);border-radius:999px;padding:6px 12px;background:var(--panel);
+  }
+  .pulse{width:8px;height:8px;border-radius:50%;background:#4ade80;box-shadow:0 0 8px #4ade80;animation:pulse 2.2s ease-in-out infinite}
+  @keyframes pulse{50%{opacity:.35}}
+
+  /* ---------- hero ---------- */
+  .hero{text-align:center;padding:52px 0 40px}
+  #goatBtn{
+    background:none;border:none;cursor:pointer;position:relative;display:inline-block;
+    -webkit-tap-highlight-color:transparent;
+  }
+  #goatArt svg{width:clamp(120px,20vw,164px);height:auto;display:block;animation:bob 3.4s ease-in-out infinite}
+  #goatBtn:hover #goatArt svg{transform:rotate(-5deg)}
+  #goatBtn.wobble #goatArt svg{animation:wobble .45s ease}
+  @keyframes bob{50%{transform:translateY(-7px)}}
+  @keyframes wobble{
+    25%{transform:rotate(-9deg) scale(1.06)}
+    60%{transform:rotate(7deg) scale(.97)}
+  }
+  #bleat{
+    position:absolute;top:-14px;left:78%;white-space:nowrap;
+    font-family:var(--pixel);font-size:15px;color:#14100a;background:var(--gold);
+    padding:6px 11px;border-radius:10px 10px 10px 2px;
+    opacity:0;transform:translateY(8px) scale(.8);pointer-events:none;
+    transition:all .18s ease;z-index:5;
+  }
+  #bleat.show{opacity:1;transform:translateY(0) scale(1)}
+  .wordmark{
+    font-family:var(--pixel);font-weight:700;font-size:clamp(42px,9vw,84px);
+    line-height:1.05;margin-top:18px;letter-spacing:1px;
+  }
+  .wordmark .g1{color:var(--gold)}
+  .wordmark .g2{background:linear-gradient(135deg,var(--gold) 20%,#f2efe7 80%);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .wordmark .g3{color:#f2efe7}
+  .tagline{color:var(--dim);font-size:clamp(15px,2.4vw,18px);max-width:560px;margin:14px auto 0;line-height:1.55}
+  .hints{margin-top:22px;font-family:var(--pixel);font-size:14px;color:var(--dim)}
+  .hints kbd{
+    border:1px solid var(--line);border-bottom-width:2px;background:var(--panel);
+    border-radius:6px;padding:2px 7px;font-family:inherit;font-size:13px;color:var(--text);
+  }
+  .hints .dare{color:var(--gold);opacity:.85}
+  .hint-desktop{display:inline}.hint-mobile{display:none}
+
+  /* ---------- paddock ---------- */
+  .paddock{padding-bottom:56px}
+  .label{
+    display:flex;align-items:center;gap:14px;margin-bottom:18px;
+    font-family:var(--pixel);font-size:15px;letter-spacing:2px;color:var(--dim);
+  }
+  .label::before,.label::after{content:"";height:1px;background:var(--line);flex:1}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(235px,1fr));gap:14px}
+  .card{
+    --mx:50%;--my:50%;
+    position:relative;display:flex;flex-direction:column;gap:9px;overflow:hidden;
+    background:var(--panel);border:1px solid var(--line);border-radius:18px;
+    padding:18px;text-decoration:none;min-height:150px;
+    transition:border-color .2s ease,box-shadow .25s ease,transform .15s ease;
+    will-change:transform;
+  }
+  .card::after{
+    content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .25s ease;
+    background:radial-gradient(190px circle at var(--mx) var(--my),color-mix(in srgb,var(--ac) 16%,transparent),transparent 70%);
+  }
+  .card:hover{border-color:color-mix(in srgb,var(--ac) 55%,transparent);box-shadow:0 10px 34px -12px color-mix(in srgb,var(--ac) 45%,transparent)}
+  .card:hover::after{opacity:1}
+  .ctop{display:flex;justify-content:space-between;align-items:center}
+  .cicon{font-size:27px;line-height:1;filter:drop-shadow(0 3px 8px color-mix(in srgb,var(--ac) 60%,transparent))}
+  .ckey{
+    font-family:var(--pixel);font-size:12px;color:var(--dim);
+    border:1px solid var(--line);border-bottom-width:2px;border-radius:6px;padding:1px 7px;
+  }
+  .cname{font-family:var(--pixel);font-size:19px;display:flex;align-items:center;gap:8px}
+  .badge{
+    font-size:11px;letter-spacing:1.5px;color:var(--gold);
+    border:1px solid color-mix(in srgb,var(--gold) 45%,transparent);
+    border-radius:5px;padding:2px 6px;
+  }
+  .cdesc{color:var(--dim);font-size:13.5px;line-height:1.5;flex:1}
+  .cfoot{display:flex;justify-content:space-between;align-items:center;font-family:var(--pixel);font-size:12px;color:var(--dim)}
+  .ctag{letter-spacing:1.5px;color:color-mix(in srgb,var(--ac) 80%,white)}
+  .carrow{opacity:0;transform:translate(-5px,5px);transition:all .2s ease;font-size:15px;color:var(--ac)}
+  .card:hover .carrow{opacity:1;transform:translate(0,0)}
+  .card.soon{opacity:.82}
+  .card.shake{animation:shake .35s ease}
+  @keyframes shake{
+    20%{transform:translateX(-6px)}40%{transform:translateX(6px)}
+    60%{transform:translateX(-4px)}80%{transform:translateX(3px)}
+  }
+
+  /* ---------- platform menu ---------- */
+  .cmenu{
+    position:absolute;z-index:70;background:#14161c;border:1px solid var(--line);
+    border-radius:14px;padding:6px;box-shadow:0 18px 50px -12px rgba(0,0,0,.75);
+    display:flex;flex-direction:column;gap:2px;
+    animation:menuIn .16s ease;transform-origin:top center;
+  }
+  @keyframes menuIn{from{opacity:0;transform:translateY(-6px) scale(.97)}}
+  .cmenu-item{
+    display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:9px;
+    background:none;border:none;cursor:pointer;text-decoration:none;color:var(--text);
+    font-family:var(--body);font-size:14px;text-align:left;width:100%;
+  }
+  .cmenu-item:hover{background:rgba(232,182,76,.09)}
+  .cmenu-item .mi{font-size:17px}
+  .cmenu-item .ml{font-family:var(--pixel);font-size:15px;flex:1}
+  .cmenu-item .mh{font-size:12px;color:var(--dim)}
+
+  /* ---------- footer ---------- */
+  footer{
+    display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;
+    border-top:1px solid var(--line);padding-top:18px;padding-bottom:30px;
+    font-family:var(--pixel);font-size:13px;color:var(--dim);
+  }
+
+  /* ---------- palette ---------- */
+  #palette{position:fixed;inset:0;z-index:80}
+  #palette[hidden]{display:none}
+  .pal-backdrop{position:absolute;inset:0;background:rgba(5,6,9,.62);backdrop-filter:blur(5px)}
+  .pal-box{
+    position:relative;max-width:530px;margin:11vh auto 0;background:#111319;
+    border:1px solid var(--line);border-radius:16px;overflow:hidden;
+    box-shadow:0 30px 80px -20px rgba(0,0,0,.8);
+  }
+  #palInput{
+    width:100%;background:none;border:none;outline:none;color:var(--text);
+    font-family:var(--pixel);font-size:19px;padding:17px 19px;
+    border-bottom:1px solid var(--line);
+  }
+  #palInput::placeholder{color:var(--dim);opacity:.7}
+  #palList{list-style:none;max-height:320px;overflow-y:auto;padding:7px}
+  #palList li{
+    display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;
+    cursor:pointer;border-left:2px solid transparent;
+  }
+  #palList li .pi{font-size:19px}
+  #palList li .pl{font-family:var(--pixel);font-size:16px;flex:1}
+  #palList li .ph{font-size:12px;color:var(--dim)}
+  #palList li.active{background:rgba(232,182,76,.09);border-left-color:var(--gold)}
+  #palList .none{color:var(--dim);font-family:var(--pixel);padding:14px;text-align:center}
+  .pal-foot{
+    font-family:var(--pixel);font-size:12px;color:var(--dim);
+    padding:9px 16px;border-top:1px solid var(--line);
+  }
+
+  /* ---------- toast & rain ---------- */
+  #toast{
+    position:fixed;bottom:26px;left:50%;transform:translate(-50%,14px);z-index:90;
+    background:#15171d;border:1px solid var(--line);border-radius:12px;padding:11px 17px;
+    font-family:var(--pixel);font-size:14px;opacity:0;pointer-events:none;
+    transition:all .22s ease;box-shadow:0 12px 40px rgba(0,0,0,.55);max-width:88vw;
+  }
+  #toast.on{opacity:1;transform:translate(-50%,0)}
+  #rain span{position:fixed;top:-70px;z-index:60;pointer-events:none;animation:fall linear forwards}
+  @keyframes fall{to{transform:translateY(118vh) rotate(var(--r,360deg))}}
+
+  /* ---------- responsive & motion ---------- */
+  @media(max-width:640px){
+    .hero{padding-top:34px}
+    .ckey{display:none}
+    .hint-desktop{display:none}.hint-mobile{display:inline}
+    .status{display:none}
+    footer{justify-content:center;text-align:center}
+  }
+  @media(prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+  }
+</style>
+</head>
+<body>
+
+<div class="sky" aria-hidden="true"><i class="blob b1"></i><i class="blob b2"></i><i class="blob b3"></i></div>
+<div class="grain" aria-hidden="true"></div>
+
+<header>
+  <div class="brand"><span id="miniGoat" aria-hidden="true"></span><span>goatyler<span class="tld">.com</span></span></div>
+  <div class="status"><span class="pulse"></span>all systems grazing</div>
+</header>
+
+<main>
+  <section class="hero">
+    <button id="goatBtn" aria-label="A pixel goat. Click it and see.">
+      <div id="goatArt" aria-hidden="true"></div>
+      <div id="bleat" role="status"></div>
+    </button>
+    <h1 class="wordmark"><span class="g1">goa</span><span class="g2">t</span><span class="g3">yler</span></h1>
+    <p class="tagline">G'day 👋 I'm Tyler. I build games, apps and questionable experiments.
+    This is the paddock where they all live — pick a gate.</p>
+    <p class="hints">
+      <span class="hint-desktop"><kbd>/</kbd> search &nbsp;·&nbsp; <kbd>1–9</kbd> jump &nbsp;·&nbsp; </span>
+      <span class="dare"><span class="hint-desktop">click</span><span class="hint-mobile">tap</span> the goat. i dare you.</span>
+    </p>
+  </section>
+
+  <section class="paddock">
+    <div class="label">THE PADDOCK</div>
+    <div id="grid" class="grid"></div>
+  </section>
+</main>
+
+<footer>
+  <span id="clock">…</span>
+  <span>no cookies · no trackers · 100% goat</span>
+  <span>© <span id="yr"></span> goatyler</span>
+</footer>
+
+<div id="palette" hidden>
+  <div class="pal-backdrop" id="palBackdrop"></div>
+  <div class="pal-box" role="dialog" aria-modal="true" aria-label="Quick search">
+    <input id="palInput" placeholder="where to, legend?" autocomplete="off" spellcheck="false">
+    <ul id="palList"></ul>
+    <div class="pal-foot">↑↓ move · ↵ open · esc close</div>
+  </div>
+</div>
+
+<div id="toast" role="status"></div>
+<div id="rain" aria-hidden="true"></div>
+
+<script>
+'use strict';
+
+/* ============================================================
+   ✏️  EDIT ME — your sites live here. One entry = one card.
+   name   : shown on the card
+   icon   : any emoji
+   desc   : one-liner
+   url    : full link ("" = shows a gold SOON badge instead of linking)
+   accent : the card's glow colour
+   tag    : tiny label in the card footer
+   menu   : optional — instead of url, a list of {label, icon, hint, url}
+            choices shown in a click menu (url:'' = "soon" toast)
+   ============================================================ */
+const SITES = [
+  { name:'PuttQuest',   icon:'⛳️', desc:'8-bit minigolf for iOS. 18 holes, zero ads, maximum chaos.',  url:'', accent:'#4ade80', tag:'iOS GAME' },
+  { name:'PortalJam',   icon:'🌀', desc:'Slide blocks through portals and escape. Ad-free brain fuel.', url:'', accent:'#a78bfa', tag:'iOS GAME' },
+  { name:'Badoku',      icon:'🧩', desc:'Sudoku, but with attitude. Numbers fear it.',                  accent:'#f87171', tag:'iOS & ANDROID',
+    menu:[
+      { label:'iOS',     icon:'🍎', hint:'coming soon',      url:'' },
+      { label:'Android', icon:'🤖', hint:'download the APK', url:'https://drive.google.com/file/d/1-zGPC3giphtVD6t__DWAC6Oh5lDKvEE_/view?usp=drive_link' },
+    ] },
+  { name:'Neon Hockey', icon:'🏒', desc:'Air hockey meets tennis, drenched in neon. Play it right in your browser.', url:'https://neonhockeytenis.netlify.app/', accent:'#22d3ee', tag:'WEB GAME' },
+  { name:'Email me',    icon:'📮', desc:"Say g'day — I actually read these.",                           url:'mailto:tyler2011sa@outlook.com.au', accent:'#e8b64c', tag:'CONTACT' },
+  // { name:'My Next Thing', icon:'🚀', desc:'Coming to a browser near you.', url:'https://…', accent:'#34d399', tag:'WEB' },
+];
+
+const CONFIG = {
+  timezone: 'Australia/Sydney',   // the clock in the footer
+  email: 'tyler2011sa@outlook.com.au',
+};
+
+/* ---------- helpers ---------- */
+const $ = s => document.querySelector(s);
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const finePointer = matchMedia('(pointer: fine)').matches;
+
+let toastTimer;
+function toast(msg){
+  const t = $('#toast');
+  t.textContent = msg;
+  t.classList.add('on');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('on'), 2400);
+}
+
+/* ---------- pixel goat ---------- */
+const GOAT_MAP = `
+....hH........Hh....
+...hH..........Hh...
+...hH..........Hh...
+...HH..........HH...
+....HH........HH....
+....HHwWWWWWWwHH....
+..EEWWWWWWWWWWWWEE..
+.EPPWWWWWWWWWWWWPPE.
+.EPPWWWWWWWWWWWWPPE.
+..EEWWWWWWWWWWWWEE..
+....WWWWWWWWWWWW....
+....WWBBWWWWBBWW....
+....WWWWWWWWWWWW....
+....wWWWWWWWWWWw....
+.....WWWWWWWWWW.....
+.....WNWWWWWWNW.....
+.....WWWWwwWWWW.....
+......GGGGGGGG......
+.......GGGGGG.......
+........gGGg........`;
+
+const GOAT_COLORS = {
+  H:'#e9b64d', h:'#c08a2e',           // horns
+  W:'#f0e9db', w:'#d8cfba',           // fur
+  E:'#cfc6b2', P:'#e59aa6',           // ears
+  B:'#20242e', N:'#b3766d',           // eyes, nostrils
+  G:'#b8ae94', g:'#8f866f',           // beard
+};
+
+function goatSVG(){
+  const rows = GOAT_MAP.trim().split('\n');
+  const h = rows.length, w = Math.max(...rows.map(r => r.length));
+  let rects = '';
+  rows.forEach((row, y) => {
+    [...row].forEach((ch, x) => {
+      const c = GOAT_COLORS[ch];
+      if (c) rects += `<rect x="${x}" y="${y}" width="1" height="1" fill="${c}"/>`;
+    });
+  });
+  return `<svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" role="img" aria-label="pixel goat">${rects}</svg>`;
+}
+$('#goatArt').innerHTML = goatSVG();
+$('#miniGoat').innerHTML = goatSVG();
+
+/* ---------- cards ---------- */
+const grid = $('#grid');
+const cardEls = [];
+
+SITES.forEach((s, i) => {
+  const live = !!(s.url || s.menu);
+  const a = document.createElement('a');
+  a.className = 'card' + (live ? '' : ' soon');
+  a.href = s.url || '#';
+  a.style.setProperty('--ac', s.accent);
+  a.innerHTML = `
+    <div class="ctop"><span class="cicon">${s.icon}</span>${i < 9 ? `<span class="ckey">${i+1}</span>` : ''}</div>
+    <div class="cname">${s.name}${live ? '' : '<span class="badge">SOON</span>'}</div>
+    <p class="cdesc">${s.desc}</p>
+    <div class="cfoot"><span class="ctag">${s.tag}</span><span class="carrow">${s.menu ? '▾' : '↗'}</span></div>`;
+  if (s.menu) {
+    a.setAttribute('aria-haspopup', 'menu');
+    a.setAttribute('aria-expanded', 'false');
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      menuCard === a ? closeMenu() : openMenu(a, s);
+    });
+  } else if (!s.url) {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      a.classList.remove('shake'); void a.offsetWidth; a.classList.add('shake');
+      toast(`${s.icon} ${s.name} isn't out in the wild yet — soon!`);
+    });
+  }
+  // cursor-follow glow + gentle tilt
+  a.addEventListener('pointermove', e => {
+    const r = a.getBoundingClientRect();
+    const x = e.clientX - r.left, y = e.clientY - r.top;
+    a.style.setProperty('--mx', x + 'px');
+    a.style.setProperty('--my', y + 'px');
+    if (!reduced && finePointer) {
+      const rx = ((y / r.height) - .5) * -5, ry = ((x / r.width) - .5) * 5;
+      a.style.transform = `perspective(700px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-3px)`;
+    }
+  });
+  a.addEventListener('pointerleave', () => { a.style.transform = ''; });
+  grid.appendChild(a);
+  cardEls.push(a);
+});
+
+/* ---------- platform menu (cards with a `menu` list) ---------- */
+let menuEl = null, menuCard = null;
+
+function closeMenu(){
+  if (!menuEl) return;
+  menuEl.remove(); menuEl = null;
+  menuCard?.setAttribute('aria-expanded', 'false'); menuCard = null;
+}
+function openMenu(card, s){
+  closeMenu();
+  menuCard = card;
+  card.setAttribute('aria-expanded', 'true');
+  menuEl = document.createElement('div');
+  menuEl.className = 'cmenu';
+  menuEl.setAttribute('role', 'menu');
+  s.menu.forEach(m => {
+    const item = document.createElement(m.url ? 'a' : 'button');
+    item.className = 'cmenu-item';
+    item.setAttribute('role', 'menuitem');
+    if (m.url){ item.href = m.url; item.target = '_blank'; item.rel = 'noopener'; }
+    item.innerHTML = `<span class="mi">${m.icon}</span><span class="ml">${m.label}</span><span class="mh">${m.hint}</span>`;
+    item.addEventListener('click', () => {
+      if (!m.url) toast(`${s.icon} ${s.name} for ${m.label} isn't out yet — hang tight!`);
+      closeMenu();
+    });
+    menuEl.appendChild(item);
+  });
+  document.body.appendChild(menuEl);
+  const pre = card.getBoundingClientRect();
+  // behavior:'instant' — the page uses scroll-behavior:smooth, and an async
+  // scroll here would leave the menu positioned at stale coordinates
+  if (pre.top < 0 || pre.bottom > innerHeight) card.scrollIntoView({ block: 'center', behavior: 'instant' });
+  const r = card.getBoundingClientRect();
+  menuEl.style.width = r.width + 'px';
+  menuEl.style.left = (r.left + scrollX) + 'px';
+  const below = r.bottom + 8, h = menuEl.offsetHeight;
+  menuEl.style.top = ((below + h > innerHeight - 8 ? r.top - h - 8 : below) + scrollY) + 'px';
+}
+document.addEventListener('click', e => {
+  if (menuEl && !menuEl.contains(e.target) && !menuCard.contains(e.target)) closeMenu();
+});
+
+/* ---------- command palette ---------- */
+const pal = $('#palette'), palInput = $('#palInput'), palList = $('#palList');
+let palVisible = [], palActive = 0;
+
+function palItems(){
+  return [
+    ...SITES.map((s, i) => ({
+      label: s.name,
+      hint: s.menu ? s.menu.map(m => m.label.toLowerCase()).join(' · ')
+          : s.url ? (s.url.startsWith('mailto:') ? CONFIG.email : new URL(s.url).hostname)
+          : 'coming soon',
+      icon: s.icon,
+      run: () => { closePal(); cardEls[i].click(); },
+    })),
+    { label:'Copy email address', hint:CONFIG.email, icon:'📋', run:() => { closePal(); copyEmail(); } },
+    { label:'Make it rain goats', hint:'you know you want to', icon:'🐐', run:() => { closePal(); rain(38); } },
+  ];
+}
+function fuzzy(q, s){
+  q = q.toLowerCase(); s = s.toLowerCase();
+  let i = 0;
+  for (const c of s){ if (c === q[i]) i++; if (i === q.length) return true; }
+  return q.length === 0;
+}
+function renderPal(q){
+  palVisible = palItems().filter(it => fuzzy(q, it.label));
+  palActive = 0;
+  palList.innerHTML = '';
+  if (!palVisible.length){
+    palList.innerHTML = '<li class="none">nothing here but tumbleweed 🌾</li>';
+    return;
+  }
+  palVisible.forEach((it, i) => {
+    const li = document.createElement('li');
+    li.innerHTML = `<span class="pi">${it.icon}</span><span class="pl">${it.label}</span><span class="ph">${it.hint}</span>`;
+    li.addEventListener('click', it.run);
+    li.addEventListener('pointerenter', () => { palActive = i; paintActive(); });
+    palList.appendChild(li);
+  });
+  paintActive();
+}
+function paintActive(){
+  [...palList.children].forEach((li, i) => li.classList.toggle('active', i === palActive));
+  palList.children[palActive]?.scrollIntoView({ block:'nearest' });
+}
+function openPal(){ pal.hidden = false; palInput.value = ''; renderPal(''); palInput.focus(); }
+function closePal(){ pal.hidden = true; palInput.blur(); }
+
+palInput.addEventListener('input', () => renderPal(palInput.value));
+palInput.addEventListener('keydown', e => {
+  if (e.key === 'ArrowDown'){ e.preventDefault(); palActive = Math.min(palActive + 1, palVisible.length - 1); paintActive(); }
+  if (e.key === 'ArrowUp'){ e.preventDefault(); palActive = Math.max(palActive - 1, 0); paintActive(); }
+  if (e.key === 'Enter'){ palVisible[palActive]?.run(); }
+});
+$('#palBackdrop').addEventListener('click', closePal);
+
+function copyEmail(){
+  (navigator.clipboard?.writeText(CONFIG.email) || Promise.reject())
+    .then(() => toast('📋 email copied — go on, say g\'day'))
+    .catch(() => toast('📮 ' + CONFIG.email));
+}
+
+/* ---------- keyboard shortcuts ---------- */
+document.addEventListener('keydown', e => {
+  const typing = /^(input|textarea)$/i.test(document.activeElement?.tagName || '');
+  if (e.key === 'Escape'){
+    if (!pal.hidden) return closePal();
+    if (menuEl) return closeMenu();
+  }
+  if ((e.key === '/' && !typing) || ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k')){
+    e.preventDefault();
+    pal.hidden ? openPal() : closePal();
+    return;
+  }
+  if (!typing && pal.hidden && !e.metaKey && !e.ctrlKey && !e.altKey && e.key >= '1' && e.key <= '9'){
+    cardEls[+e.key - 1]?.click();
+  }
+});
+
+/* ---------- the goat ---------- */
+const BLEATS = ['meh.', 'MAAAAH!', 'baa.', '🐐', '*chews thoughtfully*', 'again?', 'the herd approves', 'ow. rude.', 'i contain multitudes'];
+let goatClicks = 0, bleatTimer, audioCtx;
+
+function bleatSound(){
+  try {
+    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    const t = audioCtx.currentTime;
+    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+    const v = audioCtx.createOscillator(), vg = audioCtx.createGain();
+    o.type = 'square';
+    o.frequency.setValueAtTime(523, t);
+    o.frequency.exponentialRampToValueAtTime(392, t + .28);
+    v.frequency.value = 26; vg.gain.value = 24;              // wobble = the "ehhh" in meh
+    v.connect(vg); vg.connect(o.frequency);
+    g.gain.setValueAtTime(.0001, t);
+    g.gain.exponentialRampToValueAtTime(.08, t + .03);
+    g.gain.exponentialRampToValueAtTime(.0001, t + .3);
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start(t); v.start(t); o.stop(t + .32); v.stop(t + .32);
+  } catch(e){}
+}
+
+$('#goatBtn').addEventListener('click', () => {
+  goatClicks++;
+  bleatSound();
+  const btn = $('#goatBtn');
+  btn.classList.remove('wobble'); void btn.offsetWidth; btn.classList.add('wobble');
+  const bleat = $('#bleat');
+  bleat.textContent = goatClicks === 4 ? 'one more and you\'ll regret it' :
+                      BLEATS[Math.floor(Math.random() * BLEATS.length)];
+  bleat.classList.add('show');
+  clearTimeout(bleatTimer);
+  bleatTimer = setTimeout(() => bleat.classList.remove('show'), 1200);
+  if (goatClicks % 5 === 0) rain(34);
+});
+
+function rain(n){
+  if (reduced){ toast('🐐 (imagine goats raining majestically — reduced motion is on)'); return; }
+  const box = $('#rain');
+  for (let i = 0; i < n; i++){
+    const s = document.createElement('span');
+    s.textContent = '🐐';
+    s.style.left = Math.random() * 100 + 'vw';
+    s.style.fontSize = (16 + Math.random() * 30) + 'px';
+    s.style.animationDuration = (2.2 + Math.random() * 2.6) + 's';
+    s.style.animationDelay = (Math.random() * 1.1) + 's';
+    s.style.setProperty('--r', (Math.random() * 720 - 360) + 'deg');
+    s.addEventListener('animationend', () => s.remove());
+    box.appendChild(s);
+  }
+}
+
+/* ---------- clock ---------- */
+function tick(){
+  try {
+    const t = new Intl.DateTimeFormat('en-AU', { hour:'numeric', minute:'2-digit', timeZone:CONFIG.timezone })
+      .format(new Date()).toLowerCase().replace(/\s/g, '');
+    $('#clock').textContent = `${t} at goat hq 🇦🇺`;
+  } catch(e){ $('#clock').textContent = ''; }
+}
+tick();
+setInterval(tick, 30000);
+$('#yr').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
